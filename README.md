@@ -103,6 +103,16 @@ Contributions are welcome\! Adding a new effect is straightforward:
   - [ ] Save/Load effect stack presets
   - [ ] WebGL-backed filters for better performance
 
+## Support the Developer
+
+If you find this project useful, please consider making a donation to support its development.
+
+**Bitcoin:**
+
+```
+bc1qnpqpfq7e8pjtlqj7aa6x2y2c9ctnpts5u9lx7v
+```
+
 ## License
 
 Copyright (C) 2025 kododake.
@@ -146,6 +156,16 @@ npm run dev
 1.  `src/core/effects/` に `BaseEffect` を継承したクラスを作成。
 2.  `renderControls` メソッド内で React コンポーネント（スライダー等）を返す。
 3.  `src/core/effects/registry.ts` に登録するだけです。
+
+### 開発を支援する（寄付）
+
+このプロジェクトが役に立ったと感じていただけましたら、寄付でのご支援をお願いします！
+
+**Bitcoin:**
+
+```
+bc1qnpqpfq7e8pjtlqj7aa6x2y2c9ctnpts5u9lx7v
+```
 
 ### ライセンス
 
