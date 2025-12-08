@@ -186,7 +186,7 @@ export function CanvasWorkspace() {
         <div>
           <h1 className="text-lg font-semibold text-foreground">BrowserImageFX</h1>
           <p className="text-sm text-muted-foreground">
-            Load an image, stack effects, and export the result directly from your browser.
+            Load an image, stack effects, and export the result directly from your browser. Processed entirely within the browser without being sent to a server.
           </p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
