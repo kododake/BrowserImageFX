@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 
-export type EffectType = 'gaussian-blur'
+export type EffectType = 'gaussian-blur' | 'brightness'
 
 export type EffectParams = Record<string, number | boolean>
 
