@@ -17,13 +17,12 @@
  */
 
 /* eslint-disable react-refresh/only-export-components */
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Contrast as ContrastIcon } from 'lucide-react'
 
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import type { EffectControlChangeHandler } from '@/core/effects/types'
-import { useFrameThrottledCallback } from '@/lib/utils'
 
 import { BaseEffect } from './BaseEffect'
 
@@ -46,14 +45,7 @@ interface ContrastControlsProps {
 }
 
 function ContrastControls({ value, onValueChange }: ContrastControlsProps) {
-  const [internalValue, setInternalValue] = useState(value)
-  const throttledChange = useFrameThrottledCallback(onValueChange, 30)
-
-  useEffect(() => {
-    setInternalValue(value)
-  }, [value])
-
-  const display = useMemo(() => formatContrast(internalValue), [internalValue])
+  const display = useMemo(() => formatContrast(value), [value])
 
   return (
     <div className="space-y-3">
@@ -65,20 +57,11 @@ function ContrastControls({ value, onValueChange }: ContrastControlsProps) {
         <span className="text-xs font-semibold text-foreground/90">{display}</span>
       </div>
       <Slider
-        value={[internalValue]}
+        value={[value]}
         min={MIN_CONTRAST}
         max={MAX_CONTRAST}
         step={1}
-        onValueChange={(val) => {
-          const next = val[0] ?? DEFAULT_CONTRAST
-          setInternalValue(next)
-          throttledChange(next)
-        }}
-        onValueCommit={(val) => {
-          const next = val[0] ?? DEFAULT_CONTRAST
-          setInternalValue(next)
-          onValueChange(next)
-        }}
+        onValueChange={(val) => onValueChange(val[0] ?? DEFAULT_CONTRAST)}
         aria-label="Contrast adjustment"
       />
     </div>

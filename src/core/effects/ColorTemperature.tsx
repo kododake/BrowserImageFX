@@ -17,13 +17,12 @@
  */
 
 /* eslint-disable react-refresh/only-export-components */
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { ThermometerSun } from 'lucide-react'
 
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import type { EffectControlChangeHandler } from '@/core/effects/types'
-import { useFrameThrottledCallback } from '@/lib/utils'
 
 import { BaseEffect } from './BaseEffect'
 
@@ -44,14 +43,7 @@ interface ColorTemperatureControlsProps {
 }
 
 function ColorTemperatureControls({ value, onValueChange }: ColorTemperatureControlsProps) {
-  const [internalValue, setInternalValue] = useState(value)
-  const throttledChange = useFrameThrottledCallback(onValueChange, 30)
-
-  useEffect(() => {
-    setInternalValue(value)
-  }, [value])
-
-  const display = useMemo(() => formatTemperature(internalValue), [internalValue])
+  const display = useMemo(() => formatTemperature(value), [value])
 
   return (
     <div className="space-y-3">
@@ -63,20 +55,11 @@ function ColorTemperatureControls({ value, onValueChange }: ColorTemperatureCont
         <span className="text-xs font-semibold text-foreground/90">{display}</span>
       </div>
       <Slider
-        value={[internalValue]}
+        value={[value]}
         min={MIN_TEMPERATURE}
         max={MAX_TEMPERATURE}
         step={1}
-        onValueChange={(val) => {
-          const next = val[0] ?? DEFAULT_TEMPERATURE
-          setInternalValue(next)
-          throttledChange(next)
-        }}
-        onValueCommit={(val) => {
-          const next = val[0] ?? DEFAULT_TEMPERATURE
-          setInternalValue(next)
-          onValueChange(next)
-        }}
+        onValueChange={(val) => onValueChange(val[0] ?? DEFAULT_TEMPERATURE)}
         aria-label="Color temperature"
       />
     </div>

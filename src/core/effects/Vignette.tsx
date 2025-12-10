@@ -17,13 +17,12 @@
  */
 
 /* eslint-disable react-refresh/only-export-components */
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Circle } from 'lucide-react'
 
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import type { EffectControlChangeHandler } from '@/core/effects/types'
-import { useFrameThrottledCallback } from '@/lib/utils'
 
 import { BaseEffect } from './BaseEffect'
 
@@ -47,21 +46,8 @@ interface VignetteControlsProps {
 }
 
 function VignetteControls({ strength, radius, onStrengthChange, onRadiusChange }: VignetteControlsProps) {
-  const [internalStrength, setInternalStrength] = useState(strength)
-  const [internalRadius, setInternalRadius] = useState(radius)
-  const throttledStrength = useFrameThrottledCallback(onStrengthChange, 30)
-  const throttledRadius = useFrameThrottledCallback(onRadiusChange, 30)
-
-  useEffect(() => {
-    setInternalStrength(strength)
-  }, [strength])
-
-  useEffect(() => {
-    setInternalRadius(radius)
-  }, [radius])
-
-  const strengthLabel = useMemo(() => formatPercentage(internalStrength), [internalStrength])
-  const radiusLabel = useMemo(() => formatPercentage(internalRadius), [internalRadius])
+  const strengthLabel = useMemo(() => formatPercentage(strength), [strength])
+  const radiusLabel = useMemo(() => formatPercentage(radius), [radius])
 
   return (
     <div className="space-y-4">
@@ -74,20 +60,11 @@ function VignetteControls({ strength, radius, onStrengthChange, onRadiusChange }
           <span className="text-xs font-semibold text-foreground/90">{strengthLabel}</span>
         </div>
         <Slider
-          value={[internalStrength]}
+          value={[strength]}
           min={MIN_STRENGTH}
           max={MAX_STRENGTH}
           step={0.01}
-          onValueChange={(val) => {
-            const next = val[0] ?? DEFAULT_STRENGTH
-            setInternalStrength(next)
-            throttledStrength(next)
-          }}
-          onValueCommit={(val) => {
-            const next = val[0] ?? DEFAULT_STRENGTH
-            setInternalStrength(next)
-            onStrengthChange(next)
-          }}
+          onValueChange={(val) => onStrengthChange(val[0] ?? DEFAULT_STRENGTH)}
           aria-label="Vignette strength"
         />
       </div>
@@ -97,20 +74,11 @@ function VignetteControls({ strength, radius, onStrengthChange, onRadiusChange }
           <span className="text-xs font-semibold text-foreground/90">{radiusLabel}</span>
         </div>
         <Slider
-          value={[internalRadius]}
+          value={[radius]}
           min={MIN_RADIUS}
           max={MAX_RADIUS}
           step={0.01}
-          onValueChange={(val) => {
-            const next = val[0] ?? DEFAULT_RADIUS
-            setInternalRadius(next)
-            throttledRadius(next)
-          }}
-          onValueCommit={(val) => {
-            const next = val[0] ?? DEFAULT_RADIUS
-            setInternalRadius(next)
-            onRadiusChange(next)
-          }}
+          onValueChange={(val) => onRadiusChange(val[0] ?? DEFAULT_RADIUS)}
           aria-label="Vignette radius"
         />
       </div>

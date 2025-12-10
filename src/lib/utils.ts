@@ -18,7 +18,8 @@ export function useFrameThrottledCallback<T extends (...args: any[]) => void>(
   const timeoutIdRef = useRef<number | null>(null)
   const lastRunRef = useRef(0)
   const latestArgsRef = useRef<Parameters<T> | null>(null)
-  const frameDuration = 1000 / fps
+  const shouldThrottle = fps > 0
+  const frameDuration = shouldThrottle ? 1000 / fps : 0
 
   useEffect(() => {
     callbackRef.current = callback
@@ -33,6 +34,11 @@ export function useFrameThrottledCallback<T extends (...args: any[]) => void>(
 
   return useCallback(
     (...args: Parameters<T>) => {
+      if (!shouldThrottle) {
+        callbackRef.current(...args)
+        return
+      }
+
       latestArgsRef.current = args
       const invoke = () => {
         if (!latestArgsRef.current) {

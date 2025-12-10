@@ -17,14 +17,13 @@
  */
 
 /* eslint-disable react-refresh/only-export-components */
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { Palette } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import type { EffectControlChangeHandler } from '@/core/effects/types'
-import { useFrameThrottledCallback } from '@/lib/utils'
 
 import { BaseEffect } from './BaseEffect'
 
@@ -54,13 +53,7 @@ interface LutControlsProps {
 }
 
 function LutControls({ preset, intensity, onPresetChange, onIntensityChange }: LutControlsProps) {
-  const [internalIntensity, setInternalIntensity] = useState(intensity)
-  const throttledIntensity = useFrameThrottledCallback(onIntensityChange, 30)
-  const displayIntensity = useMemo(() => formatIntensity(internalIntensity), [internalIntensity])
-
-  useEffect(() => {
-    setInternalIntensity(intensity)
-  }, [intensity])
+  const displayIntensity = useMemo(() => formatIntensity(intensity), [intensity])
 
   return (
     <div className="space-y-4">
@@ -89,20 +82,11 @@ function LutControls({ preset, intensity, onPresetChange, onIntensityChange }: L
           <span className="text-xs font-semibold text-foreground/90">{displayIntensity}</span>
         </div>
         <Slider
-          value={[internalIntensity]}
+          value={[intensity]}
           min={MIN_INTENSITY}
           max={MAX_INTENSITY}
           step={1}
-          onValueChange={(val) => {
-            const next = val[0] ?? DEFAULT_INTENSITY
-            setInternalIntensity(next)
-            throttledIntensity(next)
-          }}
-          onValueCommit={(val) => {
-            const next = val[0] ?? DEFAULT_INTENSITY
-            setInternalIntensity(next)
-            onIntensityChange(next)
-          }}
+          onValueChange={(val) => onIntensityChange(val[0] ?? DEFAULT_INTENSITY)}
           aria-label="LUT intensity"
         />
       </div>
