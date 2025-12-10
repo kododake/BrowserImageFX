@@ -8,12 +8,21 @@ export type SliderProps = React.ComponentPropsWithoutRef<typeof SliderPrimitive.
 export const Slider = React.forwardRef<
   React.ElementRef<typeof SliderPrimitive.Root>,
   SliderProps
->(({ className, value, defaultValue, ...props }, ref) => (
+>(({ className, value, defaultValue, style, onContextMenu, ...props }, ref) => (
   <SliderPrimitive.Root
     ref={ref}
     value={value}
     defaultValue={defaultValue}
     className={cn('relative flex w-full touch-none select-none items-center', className)}
+    style={{
+      WebkitTouchCallout: 'none',
+      WebkitUserSelect: 'none',
+      ...style,
+    }}
+    onContextMenu={(event) => {
+      event.preventDefault()
+      onContextMenu?.(event)
+    }}
     {...props}
   >
     <SliderPrimitive.Track className="relative h-1.5 w-full overflow-hidden rounded-full bg-white/10">
