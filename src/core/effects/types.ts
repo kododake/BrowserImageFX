@@ -1,8 +1,14 @@
 import type { ReactNode } from 'react'
 
-export type EffectType = 'gaussian-blur' | 'brightness' | 'contrast'
+export type EffectType =
+  | 'gaussian-blur'
+  | 'brightness'
+  | 'contrast'
+  | 'lut'
+  | 'vignette'
+  | 'color-temperature'
 
-export type EffectParams = Record<string, number | boolean>
+export type EffectParams = Record<string, number | boolean | string>
 
 export type EffectControlChangeHandler = (params: EffectParams) => void
 

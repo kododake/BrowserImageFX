@@ -17,16 +17,17 @@
  */
 
 /* eslint-disable react-refresh/only-export-components */
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Droplets } from 'lucide-react'
 
 import { Label } from '@/components/ui/label'
 import { Slider } from '@/components/ui/slider'
 import type { EffectControlChangeHandler } from '@/core/effects/types'
+import { useFrameThrottledCallback } from '@/lib/utils'
 
 import { BaseEffect } from './BaseEffect'
 
-const MAX_RADIUS = 200
+const MAX_RADIUS = 150
 
 function formatBlurValue(value: number) {
   return `${value.toFixed(0)} px`
@@ -38,7 +39,14 @@ interface GaussianBlurControlsProps {
 }
 
 function GaussianBlurControls({ value, onValueChange }: GaussianBlurControlsProps) {
-  const display = useMemo(() => formatBlurValue(value), [value])
+  const [internalValue, setInternalValue] = useState(value)
+  const throttledChange = useFrameThrottledCallback(onValueChange, 30)
+
+  useEffect(() => {
+    setInternalValue(value)
+  }, [value])
+
+  const display = useMemo(() => formatBlurValue(internalValue), [internalValue])
 
   return (
     <div className="space-y-3">
@@ -50,11 +58,20 @@ function GaussianBlurControls({ value, onValueChange }: GaussianBlurControlsProp
         <span className="text-xs font-semibold text-foreground/90">{display}</span>
       </div>
       <Slider
-        value={[value]}
+        value={[internalValue]}
         min={0}
         max={MAX_RADIUS}
         step={1}
-        onValueChange={(val) => onValueChange(val[0] ?? 0)}
+        onValueChange={(val) => {
+          const next = val[0] ?? 0
+          setInternalValue(next)
+          throttledChange(next)
+        }}
+        onValueCommit={(val) => {
+          const next = val[0] ?? 0
+          setInternalValue(next)
+          onValueChange(next)
+        }}
         aria-label="Gaussian blur radius"
       />
     </div>

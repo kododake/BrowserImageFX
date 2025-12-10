@@ -2,6 +2,9 @@ import type { IEffect, EffectType } from './types'
 import { GaussianBlurEffect } from './GaussianBlur'
 import { BrightnessEffect } from './Brightness'
 import { ContrastEffect } from './Contrast'
+import { LutEffect } from './LUT'
+import { VignetteEffect } from './Vignette'
+import { ColorTemperatureEffect } from './ColorTemperature'
 
 export interface EffectDefinition {
   type: EffectType
@@ -22,6 +25,24 @@ const definitions: EffectDefinition[] = [
     name: 'Contrast',
     description: 'Increase or decrease the image contrast to emphasize shadows and highlights.',
     create: () => new ContrastEffect(),
+  },
+  {
+    type: 'lut',
+    name: 'Color LUT',
+    description: 'Blend cinematic color presets like teal & orange, film fade, or monochrome.',
+    create: () => new LutEffect(),
+  },
+  {
+    type: 'vignette',
+    name: 'Vignette',
+    description: 'Darken the frame edges to guide focus toward the center of the image.',
+    create: () => new VignetteEffect(),
+  },
+  {
+    type: 'color-temperature',
+    name: 'Color Temperature',
+    description: 'Warm or cool the scene with a Kelvin-inspired temperature slider.',
+    create: () => new ColorTemperatureEffect(),
   },
   {
     type: 'gaussian-blur',
