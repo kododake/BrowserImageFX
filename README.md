@@ -19,6 +19,7 @@
 - 🖼️ **Canvas-Driven Preview** – Rendering stays on the client via an extensible `EffectPipeline` that targets the HTML Canvas 2D context.
 - 🌈 **HDR Pipeline** – WebGL2-based tone mapping converts `.hdr` (RGBE) images to SDR before the effect stack processes them.
 - ⚡ **Modern Stack** – Built with Vite, React 19, and TypeScript for a fast, strictly typed workflow.
+- 🧰 **Effect Library & Stack** – Browse brightness, contrast, LUT, vignette, temperature, and blur effects, then reorder them from the stack panel or mobile sheet.
 - 🎨 **Glassmorphism UI** – Tailwind-powered dark layout with responsive zoom controls and keyboard-friendly interactions.
 
 ## Tech Stack
@@ -33,6 +34,7 @@
 ## Getting Started
 
 ### Prerequisites
+
 - Node.js (v18 or later recommended)
 
 ### Installation
@@ -65,12 +67,12 @@ graph LR
     Pipe2 -->|Final Render| Display[Main Canvas]
 ```
 
-  - **Effect Contracts** (`src/core/effects/types.ts`): Defines the `IEffect` interface (`apply`, `renderControls`).
-  - **State Management** (`src/store/effects.ts`): Zustand store that manages the order and parameters of the effect stack.
-  - **HDR Workflow**:
-    1.  `RgbeLoader` decodes `.hdr` files.
-    2.  `ToneMappingRenderer` (WebGL2) converts linear float data to SDR.
-    3.  The result is fed into the standard 2D Canvas pipeline.
+- **Effect Contracts** (`src/core/effects/types.ts`): Defines the `IEffect` interface (`apply`, `renderControls`).
+- **State Management** (`src/store/effects.ts`): Zustand store that manages the order and parameters of the effect stack.
+- **HDR Workflow**:
+  1. `RgbeLoader` decodes `.hdr` files.
+  2. `ToneMappingRenderer` (WebGL2) converts linear float data to SDR.
+  3. The result is fed into the standard 2D Canvas pipeline.
 
 ## Directory Structure
 
@@ -88,20 +90,30 @@ src/
 └── lib/                # Utilities
 ```
 
+## Available Effects
+
+- **Brightness** – Percentage-based exposure control with live preview.
+- **Contrast** – Emphasize shadows and highlights by stretching color ranges.
+- **Color LUT** – Blend cinematic presets including neutral, cool, warm, and filmic looks.
+- **Vignette** – Darken edges with radius, softness, and strength sliders.
+- **Color Temperature** – Kelvin-inspired slider that shifts white balance between warm and cool.
+- **Gaussian Blur** – Softens details using a configurable blur radius.
+
 ## Extending BrowserImageFX
 
 Contributions are welcome\! Adding a new effect is straightforward:
 
-1.  **Create Class**: Extend `BaseEffect` in `src/core/effects/`. Implement the `apply()` method using standard Canvas 2D API.
-2.  **Build UI**: Implement `renderControls()` to return React components (Sliders, Switches) for parameter tuning.
-3.  **Register**: Add your effect to the `definitions` array in `src/core/effects/registry.ts`.
+1. **Create Class**: Extend `BaseEffect` in `src/core/effects/`. Implement the `apply()` method using standard Canvas 2D API.
+2. **Build UI**: Implement `renderControls()` to return React components (Sliders, Switches) for parameter tuning.
+3. **Register**: Add your effect to the `definitions` array in `src/core/effects/registry.ts`.
 
 ## Roadmap
 
-  - [ ] Additional effects (Brightness, Contrast, LUT, Vignette)
-  - [ ] Undo/Redo history support
-  - [ ] Save/Load effect stack presets
-  - [ ] WebGL-backed filters for better performance
+- [x] Core visual effects (Brightness, Contrast, LUT, Vignette, Color Temperature, Gaussian Blur)
+- [ ] Undo/Redo history support
+- [ ] Save/Load effect stack presets
+- [ ] WebGL-backed filters for better performance
+- [ ] WebGPU pipeline (GPU effects with Canvas fallback)
 
 ## Support the Developer
 
@@ -109,7 +121,7 @@ If you find this project useful, please consider making a donation to support it
 
 **Bitcoin:**
 
-```
+```text
 bc1qnpqpfq7e8pjtlqj7aa6x2y2c9ctnpts5u9lx7v
 ```
 
@@ -120,9 +132,9 @@ Copyright (C) 2025 kododake.
 This project is licensed under the **GNU Affero General Public License v3.0**.  
 See the [LICENSE](https://github.com/kododake/BrowserImageFX?tab=AGPL-3.0-1-ov-file) file for details.
 
------
+---
 
-# BrowserImageFX (日本語)
+## BrowserImageFX (日本語)
 
 BrowserImageFX は、ブラウザ内で完結するモダンな画像処理スタジオです。画像を読み込み、複数のエフェクトを積み重ね、サーバーに送信することなくリアルタイムに編集・書き出しが可能です。
 
@@ -131,10 +143,11 @@ BrowserImageFX は、ブラウザ内で完結するモダンな画像処理ス�
 
 ### 主な特徴
 
-  - 🔁 **エフェクトパイプラインの合成** – エフェクトの追加・並べ替え・削除を即時反映。
-  - 🎚️ **豊富なパラメーター調整** – Zustand と shadcn/ui ベースの UI で直感的な操作。
-  - 🌈 **HDR 対応** – WebGL2 トーンマッピングにより、`.hdr` 画像を SDR に変換して編集可能。
-  - ⚡ **モダンな開発環境** – React 19 + TypeScript + Vite による高速な開発体験。
+- 🔁 **エフェクトパイプラインの合成** – エフェクトの追加・並べ替え・削除を即時反映。
+- 🎚️ **豊富なパラメーター調整** – Zustand と shadcn/ui ベースの UI で直感的な操作。
+- 🌈 **HDR 対応** – WebGL2 トーンマッピングにより、`.hdr` 画像を SDR に変換して編集可能。
+- ⚡ **モダンな開発環境** – React 19 + TypeScript + Vite による高速な開発体験。
+- 🧰 **エフェクトライブラリ** – 明るさ・コントラスト・LUT・ヴィネット・色温度・ぼかしをデスクトップとモバイルのパネルで簡単に切り替え可能。
 
 ### セットアップ
 
@@ -145,17 +158,26 @@ npm run dev
 
 ### アーキテクチャの概要
 
-  - **エフェクト契約**: 全エフェクトは共通のインターフェース (`IEffect`) を実装します。
-  - **パイプライン**: 元画像をオフスクリーンキャンバスにコピーし、スタック順に処理を適用して描画します。
-  - **HDRワークフロー**: `.hdr` ファイルを WebGL2 で現像し、通常の画像処理パイプラインに渡します。
+- **エフェクト契約**: 全エフェクトは共通のインターフェース (`IEffect`) を実装します。
+- **パイプライン**: 元画像をオフスクリーンキャンバスにコピーし、スタック順に処理を適用して描画します。
+- **HDRワークフロー**: `.hdr` ファイルを WebGL2 で現像し、通常の画像処理パイプラインに渡します。
+
+### 利用可能なエフェクト
+
+- **明るさ (Brightness)** – 露光量をパーセンテージで微調整。
+- **コントラスト (Contrast)** – 階調を強調して陰影を際立たせます。
+- **カラーLUT (Color LUT)** – シネマティックなプリセットをブレンドし、色味を一括調整。
+- **ヴィネット (Vignette)** – 半径・ソフトネス・強度を調整して周辺光量をコントロール。
+- **色温度 (Color Temperature)** – ケルビン風スライダーで暖色/寒色を切り替え。
+- **ガウシアンぼかし (Gaussian Blur)** – 半径調整で柔らかなぼかしを適用。
 
 ### 拡張方法（新しいエフェクトの追加）
 
 コントリビューション大歓迎です！
 
-1.  `src/core/effects/` に `BaseEffect` を継承したクラスを作成。
-2.  `renderControls` メソッド内で React コンポーネント（スライダー等）を返す。
-3.  `src/core/effects/registry.ts` に登録するだけです。
+1. `src/core/effects/` に `BaseEffect` を継承したクラスを作成。
+2. `renderControls` メソッド内で React コンポーネント（スライダー等）を返す。
+3. `src/core/effects/registry.ts` に登録するだけです。
 
 ### 開発を支援する（寄付）
 
@@ -163,7 +185,7 @@ npm run dev
 
 **Bitcoin:**
 
-```
+```text
 bc1qnpqpfq7e8pjtlqj7aa6x2y2c9ctnpts5u9lx7v
 ```
 
