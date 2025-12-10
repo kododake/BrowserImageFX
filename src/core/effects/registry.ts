@@ -1,6 +1,7 @@
 import type { IEffect, EffectType } from './types'
 import { GaussianBlurEffect } from './GaussianBlur'
 import { BrightnessEffect } from './Brightness'
+import { ContrastEffect } from './Contrast'
 
 export interface EffectDefinition {
   type: EffectType
@@ -15,6 +16,12 @@ const definitions: EffectDefinition[] = [
     name: 'Brightness',
     description: 'Brighten or darken the image with a simple percentage-based adjustment.',
     create: () => new BrightnessEffect(),
+  },
+  {
+    type: 'contrast',
+    name: 'Contrast',
+    description: 'Increase or decrease the image contrast to emphasize shadows and highlights.',
+    create: () => new ContrastEffect(),
   },
   {
     type: 'gaussian-blur',
